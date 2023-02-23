@@ -39,8 +39,6 @@ enemyPaddle.rect.x = SCREEN_WIDTH - rectWidth
 enemyPaddle.rect.y = rectY
 
 # Ball
-
-
 ball = Ball(ballColor, ballWidth, ballHeight)
 ball.rect.x = SCREEN_WIDTH/2
 ball.rect.y = SCREEN_HEIGHT/2
@@ -58,6 +56,7 @@ clock = pygame.time.Clock()
 # Scoring
 playerScore = 0
 enemyScore = 0
+
 
 # GAME LOOP
 while playing:
@@ -108,7 +107,6 @@ while playing:
         ball.bounce()
 
     surface.fill(screenColor)
-
     spriteList.draw(surface)
 
     # Displaying scores
@@ -119,7 +117,6 @@ while playing:
     surface.blit(text, ((SCREEN_WIDTH/4) * 3, 10))
 
     pygame.display.flip()
-
     clock.tick(60)
 
 pygame.quit()
