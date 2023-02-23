@@ -46,6 +46,10 @@ playing = True
 
 clock = pygame.time.Clock()
 
+# Scoring
+playerScore = 0
+enemyScore = 0
+
 # GAME LOOP
 while playing:
     for event in pygame.event.get():
@@ -54,6 +58,9 @@ while playing:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_x:
                 playing = False
+
+    if (enemyScore >= 5) or (playerScore >= 5):
+        playing = False
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
@@ -68,8 +75,10 @@ while playing:
 
     # bouncing logic
     if ball.rect.x >= (SCREEN_WIDTH - ballWidth):
+        playerScore += 1
         ball.velocity[0] = -ball.velocity[0]
     if ball.rect.x <= 0:
+        enemyScore += 1
         ball.velocity[0] = -ball.velocity[0]
     if ball.rect.y >= (SCREEN_HEIGHT - ballHeight):
         ball.velocity[1] = -ball.velocity[1]
@@ -83,6 +92,13 @@ while playing:
     surface.fill(screenColor)
 
     spriteList.draw(surface)
+
+    # Displaying scores
+    font = pygame.font.Font(None, 74)
+    text = font.render(str(playerScore), 1, rectColor)
+    surface.blit(text, (SCREEN_WIDTH/4, 10))
+    text = font.render(str(enemyScore), 1, rectColor)
+    surface.blit(text, ((SCREEN_WIDTH/4) * 3, 10))
 
     pygame.display.flip()
 
