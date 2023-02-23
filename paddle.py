@@ -14,6 +14,8 @@ class Paddle(pygame.sprite.Sprite):
 
         pygame.draw.rect(self.image, color, [0, 0, width, height])
 
+        self.velocity = 5
+
         self.rect = self.image.get_rect()
 
     def move_up(self, pixels):
