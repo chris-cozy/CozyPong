@@ -76,6 +76,10 @@ while playing:
     if ball.rect.y <= 0:
         ball.velocity[1] = -ball.velocity[1]
 
+    # Collisions
+    if pygame.sprite.collide_mask(ball, playerPaddle) or pygame.sprite.collide_mask(ball, enemyPaddle):
+        ball.bounce()
+
     surface.fill(screenColor)
 
     spriteList.draw(surface)
