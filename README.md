@@ -6,7 +6,7 @@ This is a simple pong clone implemented using Python's Pygame library. It is con
 <h2>Installation</h2>
 To run this project use the terminal command:
 <br>
-<i>python ***.py</i>
+<i>python pong.py</i>
 <br>
 <h2>Tech Stack</h2>
 <div id ="badges">

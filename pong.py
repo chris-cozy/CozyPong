@@ -1,5 +1,6 @@
 import pygame
 import sys
+from random import randint
 from paddle import Paddle
 from ball import Ball
 
@@ -7,32 +8,40 @@ pygame.init()
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+colors = [
+    (102, 84, 94),
+    (163, 145, 147),
+    (170, 111, 115),
+    (238, 169, 144)
+]
 
 SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = 500, 500
-screenColor = (255, 204, 203)
+screenColor = (246, 224, 181)
 pygame.display.set_caption("Cozy Pong")
 surface = pygame.display.set_mode(SCREEN_SIZE)
 
 
 # Player Paddle
-rectColor = (119, 198, 110)
+playerColor = colors[randint(0, 3)]
+enemyColor = colors[randint(0, 3)]
+ballColor = colors[randint(0, 3)]
 rectWidth, rectHeight = 10, 100
 rectX, rectY = 0, ((SCREEN_HEIGHT/2) - (rectHeight/2))
 
-playerPaddle = Paddle(rectColor, rectWidth, rectHeight)
+playerPaddle = Paddle(playerColor, rectWidth, rectHeight)
 playerPaddle.rect.x = rectX
 playerPaddle.rect.y = rectY
 
 # Enemy Paddle
 
-enemyPaddle = Paddle(rectColor, rectWidth, rectHeight)
+enemyPaddle = Paddle(enemyColor, rectWidth, rectHeight)
 enemyPaddle.rect.x = SCREEN_WIDTH - rectWidth
 enemyPaddle.rect.y = rectY
 
 # Ball
 ballWidth, ballHeight = 15, 15
 
-ball = Ball(rectColor, ballWidth, ballHeight)
+ball = Ball(ballColor, ballWidth, ballHeight)
 ball.rect.x = SCREEN_WIDTH/2
 ball.rect.y = SCREEN_HEIGHT/2
 
@@ -95,9 +104,9 @@ while playing:
 
     # Displaying scores
     font = pygame.font.Font(None, 74)
-    text = font.render(str(playerScore), 1, rectColor)
+    text = font.render(str(playerScore), 1, playerColor)
     surface.blit(text, (SCREEN_WIDTH/4, 10))
-    text = font.render(str(enemyScore), 1, rectColor)
+    text = font.render(str(enemyScore), 1, enemyColor)
     surface.blit(text, ((SCREEN_WIDTH/4) * 3, 10))
 
     pygame.display.flip()
