@@ -7,17 +7,20 @@ This is a simple pong clone implemented using Python's Pygame library. It is con
   <img src="pong.png" width="500"/>
 </div>
 <h3>Program Versions</h3>
-- OS: Windows 10
-- Python version: 3.9.2
-- pygame version: 2.1.2
+<ul>
+  <li>OS: Windows 10</li>
+  <li>Python version: 3.9.2</li>
+  <li>pygame version: 2.1.2</li>
+</ul>
 <h3>Motivation</h3>
 The motivation behind this game choice is straightforward. I wanted to learn more about PyGame, while developing a playable deliverable. The simple game of pong fit my criteria. It is small in scope, yet contains all of the basic elements of a game, allowing me to learn and develop without being overwhelmed.
 <h3>Reasoning</h3>
 The structure of this game is as follows:
-- pong.py - contains the primary game logic and game loop
-- screen.py - contains the view logic, setup for the game screen
-- paddle.py - contains class logic for the paddle entity
-- ball.py - contains class logic for the ball entity
+<ul>
+  <li>pong.py - contains the primary game logic and game loop</li>
+  <li>screen.py - contains the view logic, setup for the game screen</li>
+  <li>paddle.py - contains class logic for the paddle entity</li>
+  <li>ball.py - contains class logic for the ball entity</li>
 An altered version of the MVC structured is utilized, with the model and controller within one file, the view within another file, and separate files for each entity. This was chosen because of the limited external input required to play the game.
 <h3>Image</h3>
 <div id="header" align="center">
