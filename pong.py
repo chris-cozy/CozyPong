@@ -13,12 +13,8 @@ P_WIDTH, P_HEIGHT = 10, 100
 B_WIDTH, B_HEIGHT = 15, 15
 SCORE_LIMIT = 5
 
-
 pygame.init()
 clock = pygame.time.Clock()
-
-screen = Screen(CAPTION, SCREEN_SIZE, SCREEN_WIDTH,
-                SCREEN_HEIGHT, SCREEN_COLOR)
 
 spriteColors = [
     (102, 84, 94),
@@ -32,24 +28,28 @@ ballColor = spriteColors[randint(0, 3)]
 
 playerX, playerY = 0, ((SCREEN_HEIGHT/2) - (P_HEIGHT/2))
 enemyX, enemyY = (SCREEN_WIDTH - P_WIDTH), ((SCREEN_HEIGHT/2) - (P_HEIGHT/2))
+ballX, ballY = (SCREEN_WIDTH/2), (SCREEN_HEIGHT/2)
 
-# Paddles
+# Screen Initialization #
+screen = Screen(CAPTION, SCREEN_SIZE, SCREEN_WIDTH,
+                SCREEN_HEIGHT, SCREEN_COLOR)
+
+# Paddles and Ball Initialization #
 playerPaddle = Paddle(playerColor, P_WIDTH, P_HEIGHT)
-playerPaddle.set_pos(playerX, playerY)
 enemyPaddle = Paddle(enemyColor, P_WIDTH, P_HEIGHT)
-enemyPaddle.set_pos(enemyX, enemyY)
-
-# Ball
 ball = Ball(ballColor, B_WIDTH, B_HEIGHT)
-ball.set_pos((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2))
 
+playerPaddle.set_pos(playerX, playerY)
+enemyPaddle.set_pos(enemyX, enemyY)
+ball.set_pos(ballX, ballY)
+
+# Sprite group setup #
 spriteList = pygame.sprite.Group()
 spriteList.add(playerPaddle)
 spriteList.add(enemyPaddle)
 spriteList.add(ball)
 
-playerScore = 0
-enemyScore = 0
+playerScore, enemyScore = 0, 0
 
 playing = True
 
@@ -69,19 +69,14 @@ while playing:
 
     spriteList.update()
 
-    # bouncing logic
-    if ball.rect.x >= (SCREEN_WIDTH - B_WIDTH):
-        playerScore += 1
-        ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.x <= 0:
-        enemyScore += 1
-        ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.y >= (SCREEN_HEIGHT - B_HEIGHT):
-        ball.velocity[1] = -ball.velocity[1]
-    if ball.rect.y <= 0:
-        ball.velocity[1] = -ball.velocity[1]
+    val = ball.wall_bounce(SCREEN_WIDTH, B_WIDTH, SCREEN_HEIGHT, B_HEIGHT)
 
-    # enemy ai
+    if (val == 1):
+        playerScore += 1
+    elif (val == -1):
+        enemyScore += 1
+
+    # Enemy AI #
     if ball.velocity[0] > 0:
         if ball.velocity[1] > 0:
             if (enemyPaddle.rect.y + P_HEIGHT) < SCREEN_HEIGHT:
@@ -90,10 +85,11 @@ while playing:
             if (enemyPaddle.rect.y > 0):
                 enemyPaddle.move_up(enemyPaddle.velocity)
 
-    # Collisions
+    # Collisions #
     if pygame.sprite.collide_mask(ball, playerPaddle) or pygame.sprite.collide_mask(ball, enemyPaddle):
-        ball.bounce()
+        ball.paddle_bounce()
 
+    # Screen Logic #
     screen.fill()
     screen.draw(spriteList)
     screen.display_text(playerScore, enemyScore, playerColor, enemyColor)
