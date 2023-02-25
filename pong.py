@@ -3,62 +3,57 @@ import sys
 from random import randint
 from paddle import Paddle
 from ball import Ball
+from screen import Screen
+
+### CONSTANTS ###
+SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = 700, 500
+SCREEN_COLOR = (246, 224, 181)
+CAPTION = "Cozy Pong"
+P_WIDTH, P_HEIGHT = 10, 100
+B_WIDTH, B_HEIGHT = 15, 15
+SCORE_LIMIT = 5
+
 
 pygame.init()
+clock = pygame.time.Clock()
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+screen = Screen(CAPTION, SCREEN_SIZE, SCREEN_WIDTH,
+                SCREEN_HEIGHT, SCREEN_COLOR)
+
 spriteColors = [
     (102, 84, 94),
     (163, 145, 147),
     (170, 111, 115),
     (238, 169, 144)
 ]
-screenColor = (246, 224, 181)
 playerColor = spriteColors[randint(0, 3)]
 enemyColor = spriteColors[randint(0, 3)]
 ballColor = spriteColors[randint(0, 3)]
 
-SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = 500, 500
-pygame.display.set_caption("Cozy Pong")
-surface = pygame.display.set_mode(SCREEN_SIZE)
+playerX, playerY = 0, ((SCREEN_HEIGHT/2) - (P_HEIGHT/2))
+enemyX, enemyY = (SCREEN_WIDTH - P_WIDTH), ((SCREEN_HEIGHT/2) - (P_HEIGHT/2))
 
-
-rectWidth, rectHeight = 10, 100
-ballWidth, ballHeight = 15, 15
-rectX, rectY = 0, ((SCREEN_HEIGHT/2) - (rectHeight/2))
-
-# Player Paddle
-playerPaddle = Paddle(playerColor, rectWidth, rectHeight)
-playerPaddle.rect.x = rectX
-playerPaddle.rect.y = rectY
-
-# Enemy Paddle
-enemyPaddle = Paddle(enemyColor, rectWidth, rectHeight)
-enemyPaddle.rect.x = SCREEN_WIDTH - rectWidth
-enemyPaddle.rect.y = rectY
+# Paddles
+playerPaddle = Paddle(playerColor, P_WIDTH, P_HEIGHT)
+playerPaddle.set_pos(playerX, playerY)
+enemyPaddle = Paddle(enemyColor, P_WIDTH, P_HEIGHT)
+enemyPaddle.set_pos(enemyX, enemyY)
 
 # Ball
-ball = Ball(ballColor, ballWidth, ballHeight)
-ball.rect.x = SCREEN_WIDTH/2
-ball.rect.y = SCREEN_HEIGHT/2
-
+ball = Ball(ballColor, B_WIDTH, B_HEIGHT)
+ball.set_pos((SCREEN_WIDTH/2), (SCREEN_HEIGHT/2))
 
 spriteList = pygame.sprite.Group()
 spriteList.add(playerPaddle)
 spriteList.add(enemyPaddle)
 spriteList.add(ball)
 
-playing = True
-
-clock = pygame.time.Clock()
-
-# Scoring
 playerScore = 0
 enemyScore = 0
 
+playing = True
 
-# GAME LOOP
+### GAME LOOP ###
 while playing:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -67,28 +62,21 @@ while playing:
             if event.key == pygame.K_x:
                 playing = False
 
-    if (enemyScore >= 5) or (playerScore >= 5):
+    if (enemyScore >= SCORE_LIMIT) or (playerScore >= SCORE_LIMIT):
         playing = False
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP]:
-        if (playerPaddle.rect.y > 0):
-            playerPaddle.move_up(playerPaddle.velocity)
-
-    if keys[pygame.K_DOWN]:
-        if (playerPaddle.rect.y + rectHeight) < SCREEN_HEIGHT:
-            playerPaddle.move_down(playerPaddle.velocity)
+    playerPaddle.check_keys(P_HEIGHT, SCREEN_HEIGHT)
 
     spriteList.update()
 
     # bouncing logic
-    if ball.rect.x >= (SCREEN_WIDTH - ballWidth):
+    if ball.rect.x >= (SCREEN_WIDTH - B_WIDTH):
         playerScore += 1
         ball.velocity[0] = -ball.velocity[0]
     if ball.rect.x <= 0:
         enemyScore += 1
         ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.y >= (SCREEN_HEIGHT - ballHeight):
+    if ball.rect.y >= (SCREEN_HEIGHT - B_HEIGHT):
         ball.velocity[1] = -ball.velocity[1]
     if ball.rect.y <= 0:
         ball.velocity[1] = -ball.velocity[1]
@@ -96,7 +84,7 @@ while playing:
     # enemy ai
     if ball.velocity[0] > 0:
         if ball.velocity[1] > 0:
-            if (enemyPaddle.rect.y + rectHeight) < SCREEN_HEIGHT:
+            if (enemyPaddle.rect.y + P_HEIGHT) < SCREEN_HEIGHT:
                 enemyPaddle.move_down(enemyPaddle.velocity)
         else:
             if (enemyPaddle.rect.y > 0):
@@ -106,17 +94,11 @@ while playing:
     if pygame.sprite.collide_mask(ball, playerPaddle) or pygame.sprite.collide_mask(ball, enemyPaddle):
         ball.bounce()
 
-    surface.fill(screenColor)
-    spriteList.draw(surface)
+    screen.fill()
+    screen.draw(spriteList)
+    screen.display_text(playerScore, enemyScore, playerColor, enemyColor)
+    screen.flip()
 
-    # Displaying scores
-    font = pygame.font.Font(None, 74)
-    text = font.render(str(playerScore), 1, playerColor)
-    surface.blit(text, (SCREEN_WIDTH/4, 10))
-    text = font.render(str(enemyScore), 1, enemyColor)
-    surface.blit(text, ((SCREEN_WIDTH/4) * 3, 10))
-
-    pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
