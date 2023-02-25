@@ -26,6 +26,21 @@ class Ball(pygame.sprite.Sprite):
         self.rect.x += self.velocity[0]
         self.rect.y += self.velocity[1]
 
-    def bounce(self):
+    def paddle_bounce(self):
         self.velocity[0] = -self.velocity[0]
         self.velocity[1] = randint(-8, 8)
+
+    def wall_bounce(self, screenWidth, bWidth, screenHeight, bHeight):
+        val = 0
+        if self.rect.x >= (screenWidth - bWidth):
+            self.velocity[0] = -self.velocity[0]
+            val = 1
+        if self.rect.x <= 0:
+            self.velocity[0] = -self.velocity[0]
+            val = -1
+        if self.rect.y >= (screenHeight - bHeight):
+            self.velocity[1] = -self.velocity[1]
+        if self.rect.y <= 0:
+            self.velocity[1] = -self.velocity[1]
+
+        return val
