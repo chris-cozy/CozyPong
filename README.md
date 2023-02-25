@@ -21,6 +21,7 @@ The structure of this game is as follows:
   <li>screen.py - contains the view logic, setup for the game screen</li>
   <li>paddle.py - contains class logic for the paddle entity</li>
   <li>ball.py - contains class logic for the ball entity</li>
+</ul>
 An altered version of the MVC structured is utilized, with the model and controller within one file, the view within another file, and separate files for each entity. This was chosen because of the limited external input required to play the game.
 <h3>Image</h3>
 <div id="header" align="center">
