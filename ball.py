@@ -18,6 +18,10 @@ class Ball(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
+    def set_pos(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
+
     def update(self):
         self.rect.x += self.velocity[0]
         self.rect.y += self.velocity[1]
