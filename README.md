@@ -45,4 +45,5 @@ While this game is currently complete in its default state, there are a number o
 - The enemy ai could be enhanced to increase the game difficulty.
 - The player could be given an option to select the difficulty level.
 The game structure could also be generalized to create other games of similar style. The entity classes can be customized to fit the needs of the game developer.
+There is a bug where at times the ball will get stuck on the side of the paddle and begin to vibrate until eventually either releasing itself or crashing the game. Debugging work could be done on this to fix it.
 <br>
