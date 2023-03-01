@@ -33,6 +33,8 @@ To run this project use the terminal command:
 <br>
 <i>python pong.py</i>
 <br>
+The controls for the left paddle are the up/down arrow keys. Once either side reaches five points the game is terminated.
+<br>
 <h2>Tech Stack</h2>
 <div id ="badges">
   <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original.svg" title="Git" alt="Git" width="40" height="40">
