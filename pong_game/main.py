@@ -4,20 +4,14 @@ from random import randint
 from sprites.paddle import Paddle
 from sprites.ball import Ball
 from screen import Screen
-from utils.constants import SCREEN_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_COLOR, CAPTION, P_WIDTH, P_HEIGHT, B_HEIGHT, B_WIDTH, SCORE_LIMIT, BOUNCE_COOLDOWN
+from utils.constants import SCREEN_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_COLOR, CAPTION, P_WIDTH, P_HEIGHT, B_HEIGHT, B_WIDTH, SCORE_LIMIT, BOUNCE_COOLDOWN, SPRITE_COLORS
 
 pygame.init()
 clock = pygame.time.Clock()
 
-sprite_colors = [
-    (102, 84, 94),
-    (163, 145, 147),
-    (170, 111, 115),
-    (238, 169, 144)
-]
-player_color = sprite_colors[randint(0, 3)]
-enemy_color = sprite_colors[randint(0, 3)]
-ball_color = sprite_colors[randint(0, 3)]
+player_color = SPRITE_COLORS[randint(0, 3)]
+enemy_color = SPRITE_COLORS[randint(0, 3)]
+ball_color = SPRITE_COLORS[randint(0, 3)]
 
 player_x, player_y = 0, ((SCREEN_HEIGHT/2) - (P_HEIGHT/2))
 enemy_x, enemy_y = (SCREEN_WIDTH - P_WIDTH), ((SCREEN_HEIGHT/2) - (P_HEIGHT/2))
@@ -44,7 +38,22 @@ sprite_list.add(ball)
 
 player_score, enemy_score = 0, 0
 
+screen.title_screen()
+waiting_for_input = True
+while waiting_for_input:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                pygame.quit()
+                sys.exit()
+            elif event.key == pygame.K_SPACE:
+                waiting_for_input = False
+
 playing = True
+paused = False
 
 ### GAME LOOP ###
 while playing:
@@ -52,13 +61,27 @@ while playing:
         if event.type == pygame.QUIT:
             playing = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                playing = False
+            if event.key == pygame.K_p:
+                paused = True
 
+    if (paused):
+        screen.paused()
+
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:  # Press 'P' to resume
+                    paused = False
+                if event.key == pygame.K_q:  # Press 'P' to resume
+                    pygame.quit()
+                    sys.exit()
     # Scoring #
     if (enemy_score >= SCORE_LIMIT) or (player_score >= SCORE_LIMIT):
         # Display winner and options
-        screen.display_winner(player_score, enemy_score)
+        screen.display_winner(player_score)
         screen.display_restart_or_quit()
         pygame.display.flip()
 

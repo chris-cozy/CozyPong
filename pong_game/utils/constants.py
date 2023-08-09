@@ -7,3 +7,10 @@ SCORE_LIMIT = 5
 BLACK = (0, 0, 0)
 BOUNCE_COOLDOWN = 1
 VELOCITY_BOOST = 1.05
+
+SPRITE_COLORS = [
+    (102, 84, 94),
+    (163, 145, 147),
+    (170, 111, 115),
+    (238, 169, 144)
+]
