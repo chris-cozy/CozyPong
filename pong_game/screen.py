@@ -71,12 +71,23 @@ class Screen():
             "Cozy Pong", True, SPRITE_COLORS[randint(0, 3)])
         instructions_text = font.render(
             "Press space to start", True, SPRITE_COLORS[randint(0, 3)])
+        more_instructions_text = font.render(
+            "W/S - move | P - pause | Q - quit (while paused)", True, SPRITE_COLORS[randint(0, 3)])
 
         self.fill()
         self.surface.blit(title_text, (self.screen_width //
                                        2 - 70, self.screen_height // 2 - 50))
         self.surface.blit(instructions_text, (self.screen_width //
                                               2 - 110, self.screen_height // 2))
+        self.surface.blit(more_instructions_text, (self.screen_width //
+                                                   2 - 250, self.screen_height // 2 + 50))
+        self.flip()
+
+    def paused(self):
+        font = pygame.font.Font(None, 36)
+        pause_text = font.render("Paused", True, SPRITE_COLORS[randint(0, 3)])
+        self.surface.blit(pause_text, (self.screen_width //
+                                       2 - 45, self.screen_height // 2 - 30))
         self.flip()
 
     def flip(self):

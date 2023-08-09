@@ -53,6 +53,7 @@ while waiting_for_input:
                 waiting_for_input = False
 
 playing = True
+paused = False
 
 ### GAME LOOP ###
 while playing:
@@ -60,9 +61,23 @@ while playing:
         if event.type == pygame.QUIT:
             playing = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                playing = False
+            if event.key == pygame.K_p:
+                paused = True
 
+    if (paused):
+        screen.paused()
+
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:  # Press 'P' to resume
+                    paused = False
+                if event.key == pygame.K_q:  # Press 'P' to resume
+                    pygame.quit()
+                    sys.exit()
     # Scoring #
     if (enemy_score >= SCORE_LIMIT) or (player_score >= SCORE_LIMIT):
         # Display winner and options
