@@ -71,12 +71,17 @@ while playing:
 
     # Enemy AI #
     if ball.velocity[0] > 0:
+        predicted_impact_point = ball.rect.centery
+        reaction_time = 0.2  # AI reaction speed
         if ball.velocity[1] > 0:
-            if (enemy_paddle.rect.y + P_HEIGHT) < SCREEN_HEIGHT:
-                enemy_paddle.move_down(enemy_paddle.velocity)
+            predicted_impact_point += reaction_time * ball.velocity[1]
         else:
-            if (enemy_paddle.rect.y > 0):
-                enemy_paddle.move_up(enemy_paddle.velocity)
+            predicted_impact_point -= reaction_time * abs(ball.velocity[1])
+
+        if enemy_paddle.rect.centery < predicted_impact_point:
+            enemy_paddle.move_down(enemy_paddle.velocity)
+        elif enemy_paddle.rect.centery > predicted_impact_point:
+            enemy_paddle.move_up(enemy_paddle.velocity)
 
     # Collisions #
     if pygame.sprite.collide_mask(ball, player_paddle) or pygame.sprite.collide_mask(ball, enemy_paddle):
