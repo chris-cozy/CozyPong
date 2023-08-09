@@ -2,7 +2,8 @@
 This module contains the Screen class, representing the screen object in the Pong game.
 """
 import pygame
-from utils.constants import SCORE_LIMIT
+from random import randint
+from utils.constants import SCORE_LIMIT, SPRITE_COLORS
 pygame.init()
 
 
@@ -46,21 +47,37 @@ class Screen():
         text = font.render(str(enemy_score), 1, enemy_color)
         self.surface.blit(text, ((self.screen_width/4) * 3, 10))
 
-    def display_winner(self, player_score, enemy_score):
+    def display_winner(self, player_score):
         font = pygame.font.Font(None, 36)
         if player_score >= SCORE_LIMIT:
-            winner_text = font.render("Player wins!", True, (255, 255, 255))
+            winner_text = font.render(
+                "Player wins!", True, SPRITE_COLORS[randint(0, 3)])
         else:
-            winner_text = font.render("Enemy wins!", True, (255, 255, 255))
+            winner_text = font.render(
+                "Enemy wins!", True, SPRITE_COLORS[randint(0, 3)])
         self.surface.blit(winner_text, (self.screen_width //
                                         2 - 60, self.screen_height // 2 - 40))
 
     def display_restart_or_quit(self):
         font = pygame.font.Font(None, 24)
         restart_text = font.render(
-            "Press 'R' to restart or 'Q' to quit", True, (255, 255, 255))
+            "Press 'R' to restart or 'Q' to quit", True, SPRITE_COLORS[randint(0, 3)])
         self.surface.blit(restart_text, (self.screen_width //
                                          2 - 110, self.screen_height // 2))
+
+    def title_screen(self):
+        font = pygame.font.Font(None, 36)
+        title_text = font.render(
+            "Cozy Pong", True, SPRITE_COLORS[randint(0, 3)])
+        instructions_text = font.render(
+            "Press space to start", True, SPRITE_COLORS[randint(0, 3)])
+
+        self.fill()
+        self.surface.blit(title_text, (self.screen_width //
+                                       2 - 70, self.screen_height // 2 - 50))
+        self.surface.blit(instructions_text, (self.screen_width //
+                                              2 - 110, self.screen_height // 2))
+        self.flip()
 
     def flip(self):
         """
