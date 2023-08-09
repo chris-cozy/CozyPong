@@ -52,11 +52,31 @@ while playing:
         if event.type == pygame.QUIT:
             playing = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_x:
+            if event.key == pygame.K_q:
                 playing = False
 
+    # Scoring #
     if (enemy_score >= SCORE_LIMIT) or (player_score >= SCORE_LIMIT):
-        playing = False
+        # Display winner and options
+        screen.display_winner(player_score, enemy_score)
+        screen.display_restart_or_quit()
+        pygame.display.flip()
+
+        # Wait for player input
+        waiting_for_input = True
+        while waiting_for_input:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    playing = False
+                    waiting_for_input = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        playerScore = 0
+                        enemyScore = 0
+                        waiting_for_input = False
+                    elif event.key == pygame.K_q:
+                        playing = False
+                        waiting_for_input = False
 
     player_paddle.check_keys(P_HEIGHT, SCREEN_HEIGHT)
 
