@@ -71,8 +71,8 @@ while playing:
                     waiting_for_input = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
-                        playerScore = 0
-                        enemyScore = 0
+                        player_score = 0
+                        enemy_score = 0
                         waiting_for_input = False
                     elif event.key == pygame.K_q:
                         playing = False
