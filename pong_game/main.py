@@ -4,14 +4,7 @@ from random import randint
 from sprites.paddle import Paddle
 from sprites.ball import Ball
 from screen import Screen
-
-### CONSTANTS ###
-SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = 700, 500
-SCREEN_COLOR = (246, 224, 181)
-CAPTION = "Cozy Pong"
-P_WIDTH, P_HEIGHT = 10, 100
-B_WIDTH, B_HEIGHT = 15, 15
-SCORE_LIMIT = 5
+from utils.constants import SCREEN_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_COLOR, CAPTION, P_WIDTH, P_HEIGHT, B_HEIGHT, B_WIDTH, SCORE_LIMIT
 
 pygame.init()
 clock = pygame.time.Clock()

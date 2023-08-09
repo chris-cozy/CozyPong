@@ -1,9 +1,8 @@
-import pygame
-
 """
 This module contains the Paddle class, representing the paddle objects in the Pong game.
 """
-BLACK = (0, 0, 0)
+import pygame
+from utils.constants import BLACK
 
 
 class Paddle(pygame.sprite.Sprite):
