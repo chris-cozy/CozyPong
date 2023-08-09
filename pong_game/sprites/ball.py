@@ -3,7 +3,7 @@ This module contains the Ball class, representing the ball object in the Pong ga
 """
 import pygame
 from random import randint
-BLACK = (0, 0, 0)
+from utils.constants import BLACK
 
 
 class Ball(pygame.sprite.Sprite):
