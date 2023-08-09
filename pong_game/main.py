@@ -1,8 +1,8 @@
 import pygame
 import sys
 from random import randint
-from paddle import Paddle
-from ball import Ball
+from sprites.paddle import Paddle
+from sprites.ball import Ball
 from screen import Screen
 
 ### CONSTANTS ###
