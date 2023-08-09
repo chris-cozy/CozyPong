@@ -3,7 +3,8 @@ This module contains the Ball class, representing the ball object in the Pong ga
 """
 import pygame
 from random import randint
-from utils.constants import BLACK
+import math
+from utils.constants import BLACK, VELOCITY_BOOST
 
 
 class Ball(pygame.sprite.Sprite):
@@ -46,27 +47,65 @@ class Ball(pygame.sprite.Sprite):
         self.rect.x += self.velocity[0]
         self.rect.y += self.velocity[1]
 
-    def paddle_bounce(self):
+    def paddle_bounce(self, paddle):
         """
         Change the ball's velocity upon colliding with a paddle.
+        Calculate the angle of reflection based on where the ball hits the paddle, and apply to the velocity.
+        Increase the ball speed after each hit
         """
-        self.velocity[0] = -self.velocity[0]
-        self.velocity[1] = randint(-8, 8)
+        ball_center = self.rect.centery
+        paddle_center = paddle.rect.centery
+        relative_intersection = (
+            paddle_center - ball_center) / (paddle.rect.height / 2)
 
-    def wall_bounce(self, screen_width, ball_width, screen_height, ball_height):
+        reflection_angle = relative_intersection * \
+            (math.pi / 4)  # Maximum reflection angle
+
+        # Apply reflection to ball's velocity
+        if(paddle.player):
+            ball_speed = math.sqrt(self.velocity[0]**2 + self.velocity[1]**2)
+        else:
+            ball_speed = -math.sqrt(self.velocity[0]**2 + self.velocity[1]**2)
+
+        self.velocity[0] = ball_speed * math.cos(reflection_angle)
+        self.velocity[1] = ball_speed * -math.sin(reflection_angle)
+
+        # Increase ball speed slightly for added challenge
+        self.velocity[0] *= VELOCITY_BOOST
+        self.velocity[1] *= VELOCITY_BOOST
+        paddle.increase_velocity()
+
+    def wall_bounce(self, screen_width, screen_height, cooldown_time):
         """
         Handle bouncing off the walls and scoring.
+
+        Args:
+            screen_width (int): Width of the game screen.
+            screen_height (int): Height of the game screen.
+            cooldown_time (int): Cooldown time in milliseconds.
+        Returns:
+            int: Value indicating scoring (1, -1, or 0).
         """
         val = 0
-        if self.rect.x >= (screen_width - ball_width):
-            self.velocity[0] = -self.velocity[0]
-            val = 1
+        if self.rect.x >= (screen_width - self.rect.width):
+            if self.velocity[0] > 0:  # Check for positive X velocity to avoid rapid bounces
+                self.velocity[0] = -self.velocity[0]
+                val = 1
+            # Introduce a cooldown after bouncing
+            pygame.time.wait(cooldown_time)
         if self.rect.x <= 0:
-            self.velocity[0] = -self.velocity[0]
-            val = -1
-        if self.rect.y >= (screen_height - ball_height):
+            if self.velocity[0] < 0:  # Check for negative X velocity to avoid rapid bounces
+                self.velocity[0] = -self.velocity[0]
+                val = -1
+            # Introduce a cooldown after bouncing
+            pygame.time.wait(cooldown_time)
+        if self.rect.y >= (screen_height - self.rect.height):
             self.velocity[1] = -self.velocity[1]
+            # Introduce a cooldown after bouncing
+            pygame.time.wait(cooldown_time)
         if self.rect.y <= 0:
             self.velocity[1] = -self.velocity[1]
+            # Introduce a cooldown after bouncing
+            pygame.time.wait(cooldown_time)
 
         return val

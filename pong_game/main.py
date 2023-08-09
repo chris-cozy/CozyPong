@@ -4,7 +4,7 @@ from random import randint
 from sprites.paddle import Paddle
 from sprites.ball import Ball
 from screen import Screen
-from utils.constants import SCREEN_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_COLOR, CAPTION, P_WIDTH, P_HEIGHT, B_HEIGHT, B_WIDTH, SCORE_LIMIT
+from utils.constants import SCREEN_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_COLOR, CAPTION, P_WIDTH, P_HEIGHT, B_HEIGHT, B_WIDTH, SCORE_LIMIT, BOUNCE_COOLDOWN
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -28,8 +28,8 @@ screen = Screen(CAPTION, SCREEN_SIZE, SCREEN_WIDTH,
                 SCREEN_HEIGHT, SCREEN_COLOR)
 
 # Paddles and Ball Initialization #
-player_paddle = Paddle(player_color, P_WIDTH, P_HEIGHT)
-enemy_paddle = Paddle(enemy_color, P_WIDTH, P_HEIGHT)
+player_paddle = Paddle(player_color, P_WIDTH, P_HEIGHT, True)
+enemy_paddle = Paddle(enemy_color, P_WIDTH, P_HEIGHT, False)
 ball = Ball(ball_color, B_WIDTH, B_HEIGHT)
 
 player_paddle.set_pos(player_x, player_y)
@@ -78,11 +78,11 @@ while playing:
                         playing = False
                         waiting_for_input = False
 
-    player_paddle.check_keys(P_HEIGHT, SCREEN_HEIGHT)
+    player_paddle.check_keys()
 
     sprite_list.update()
 
-    val = ball.wall_bounce(SCREEN_WIDTH, B_WIDTH, SCREEN_HEIGHT, B_HEIGHT)
+    val = ball.wall_bounce(SCREEN_WIDTH, SCREEN_HEIGHT, BOUNCE_COOLDOWN)
 
     if (val == 1):
         player_score += 1
@@ -104,8 +104,10 @@ while playing:
             enemy_paddle.move_up(enemy_paddle.velocity)
 
     # Collisions #
-    if pygame.sprite.collide_mask(ball, player_paddle) or pygame.sprite.collide_mask(ball, enemy_paddle):
-        ball.paddle_bounce()
+    if pygame.sprite.collide_mask(ball, player_paddle):
+        ball.paddle_bounce(player_paddle)
+    elif pygame.sprite.collide_mask(ball, enemy_paddle):
+        ball.paddle_bounce(enemy_paddle)
 
     # Screen Logic #
     screen.fill()
